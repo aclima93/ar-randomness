@@ -2,9 +2,9 @@
 
 ## Workshop given at Escola Secundária Emídio Navarro - Viseu
 
-Presentation:
+Presentation: https://docs.google.com/presentation/d/1MoRm92D5fuWr_vY4jTV5m43KAS6cVYpKC8nMapbDC-Y/edit?usp=sharing
 
-Code:
+Code: https://github.com/aclima93/ar-randomness/tree/master/Workshop_Viseu_02_05_2019
 
 ## Talk given at PixelsCamp 2019, 21 March
 
