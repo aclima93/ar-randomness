@@ -19,6 +19,35 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        subscribeToTopic();
+        getToken();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // ARCore requires camera permission to operate.
+        if (!CameraPermissionHelper.hasCameraPermission(this)) {
+            CameraPermissionHelper.requestCameraPermission(this);
+            return;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
+        if (!CameraPermissionHelper.hasCameraPermission(this)) {
+            Toast.makeText(this, "Camera permission is needed to run this application", Toast.LENGTH_LONG)
+                    .show();
+            if (!CameraPermissionHelper.shouldShowRequestPermissionRationale(this)) {
+                // Permission denied with checking "Do not ask again".
+                CameraPermissionHelper.launchPermissionSettings(this);
+            }
+            finish();
+        }
+    }
+
+    void subscribeToTopic() {
         // Subscrite to topic "test"
         FirebaseMessaging.getInstance().subscribeToTopic("test")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -32,7 +61,9 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
 
+    void getToken() {
         // Get token
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
