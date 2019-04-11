@@ -1,5 +1,10 @@
 package com.jtmnf.fcm;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +26,12 @@ import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
 import com.google.ar.sceneform.AnchorNode;
+import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.rendering.Color;
+import com.google.ar.sceneform.rendering.MaterialFactory;
 import com.google.ar.sceneform.rendering.ModelRenderable;
+import com.google.ar.sceneform.rendering.ShapeFactory;
+import com.google.ar.sceneform.rendering.Texture;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -34,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private static final double MIN_OPENGL_VERSION = 3.0;
 
     private ArFragment arFragment;
+    private ModelRenderable arModel;
 
     // Set to true ensures requestInstall() triggers installation if necessary.
     private boolean mUserRequestedInstall = true;
@@ -118,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
      * <p>Finishes the activity if Sceneform can not run
      */
     public static boolean checkIsSupportedDeviceOrFinish(final Activity activity) {
-        if (Build.VERSION.SDK_INT < VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             Log.e(TAG, "Sceneform requires Android N or later");
             Toast.makeText(activity, "Sceneform requires Android N or later", Toast.LENGTH_LONG).show();
             activity.finish();
@@ -178,9 +189,16 @@ public class MainActivity extends AppCompatActivity {
     void setupAR() {
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ux_fragment);
 
+        // When you build a Renderable, Sceneform loads its resources in the background while returning
+        // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
+
+        //makeCube(new Color(android.graphics.Color.RED));
+        //makeCylinder(new Color(android.graphics.Color.BLUE));
+        makeSphere(new Color(android.graphics.Color.GREEN));
+
         arFragment.setOnTapArPlaneListener(
                 (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
-                    if (andyRenderable == null) {
+                    if (arModel == null) {
                         return;
                     }
 
@@ -192,8 +210,59 @@ public class MainActivity extends AppCompatActivity {
                     // Create the transformable andy and add it to the anchor.
                     TransformableNode andy = new TransformableNode(arFragment.getTransformationSystem());
                     andy.setParent(anchorNode);
-                    andy.setRenderable(andyRenderable);
+                    andy.setRenderable(arModel);
                     andy.select();
+                });
+    }
+
+    /**
+     * Constructs cube of radius 1f and at position 0.0f, 0.15f, 0.0f on the plane
+     * Here Vector3 takes up the size - 0.2f, 0.2f, 0.2f
+     *
+     * @param color - Color
+     */
+    void makeCube(Color color) {
+        MaterialFactory.makeOpaqueWithColor(this, color)
+                .thenAccept(material -> {
+                    arModel = ShapeFactory.makeCube(
+                            new Vector3(0.2f, 0.2f, 0.2f),
+                            new Vector3(0.0f, 0.15f, 0.0f),
+                            material
+                    );
+                });
+    }
+
+    /**
+     * Constructs cylinder of radius 1f and at position 0.0f, 0.15f, 0.0f on the plane
+     * Need to mention height for the cylinder
+     *
+     * @param color - Color
+     */
+    void makeCylinder(Color color) {
+        MaterialFactory.makeOpaqueWithColor(this, color)
+                .thenAccept(material -> {
+                    arModel = ShapeFactory.makeCylinder(
+                            0.1f,
+                            0.3f,
+                            new Vector3(0.0f, 0.15f, 0.0f),
+                            material
+                    );
+                });
+    }
+
+    /**
+     * Constructs sphere of radius 1f and at position 0.0f, 0.15f, 0.0f on the plane
+     *
+     * @param color - Color
+     */
+    void makeSphere(Color color) {
+        MaterialFactory.makeOpaqueWithColor(this, color)
+                .thenAccept(material -> {
+                    arModel = ShapeFactory.makeSphere(
+                            0.1f,
+                            new Vector3(0.0f, 0.15f, 0.0f),
+                            material
+                    );
                 });
     }
 }
