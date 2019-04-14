@@ -102,7 +102,14 @@ public class MainActivity extends AppCompatActivity {
         // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
         // TODO: AR 2.1
 
-        // TODO: AR 3
+        arFragment.setOnTapArPlaneListener(
+                (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
+                    if (arModel == null) {
+                        return;
+                    }
+
+                    // TODO: AR 3
+                });
     }
 
     /**
