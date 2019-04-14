@@ -54,9 +54,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!checkIsSupportedDeviceOrFinish(this)) {
-            return;
-        }
+        // check that SceneForm can run on this device
+        // TODO: AR 0.0
 
         setContentView(R.layout.activity_main);
 
@@ -74,13 +73,10 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         // ARCore requires camera permission to operate.
-        if (!CameraPermissionHelper.hasCameraPermission(this)) {
-            CameraPermissionHelper.requestCameraPermission(this);
-            return;
-        }
+        // TODO: AR 0.1
 
         // Make sure ARCore is installed and up to date.
-        checkARCoreInstallation();
+        // TODO: AR 0.2
     }
 
     // ---------------------
@@ -88,40 +84,11 @@ public class MainActivity extends AppCompatActivity {
     // ---------------------
 
     void subscribeToTopic() {
-        // Subscrite to topic "test"
-        FirebaseMessaging.getInstance().subscribeToTopic("test")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String msg = "SUBSCRIBED";
-                        if (!task.isSuccessful()) {
-                            msg = "NOT SUBSCRIBED";
-                        }
-                        Log.d("Test", msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        // TODO: FCM 2
     }
 
     void getToken() {
-        // Get token
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("Test------------", "getInstanceId failed", task.getException());
-                            return;
-                        }
-
-                        // Get new Instance ID token
-                        String token = task.getResult().getToken();
-
-                        // Log and toast
-                        Log.d("Test------------", token);
-                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        // TODO: FCM 1
     }
 
     // --------------------
@@ -129,67 +96,13 @@ public class MainActivity extends AppCompatActivity {
     // --------------------
 
     void setupAR() {
-        arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ux_fragment);
+        // TODO: AR 1.1
 
         // When you build a Renderable, Sceneform loads its resources in the background while returning
         // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
+        // TODO: AR 2.1
 
-        //makeCube(new Color(android.graphics.Color.RED));
-        //makeCylinder(new Color(android.graphics.Color.BLUE));
-        makeSphere(new Color(android.graphics.Color.GREEN));
-
-        arFragment.setOnTapArPlaneListener(
-                (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
-                    if (arModel == null) {
-                        return;
-                    }
-
-                    // Create the Anchor.
-                    Anchor anchor = hitResult.createAnchor();
-                    AnchorNode anchorNode = new AnchorNode(anchor);
-                    anchorNode.setParent(arFragment.getArSceneView().getScene());
-
-                    // Create the transformable andy and add it to the anchor.
-                    TransformableNode andy = new TransformableNode(arFragment.getTransformationSystem());
-                    andy.setParent(anchorNode);
-                    andy.setRenderable(arModel);
-                    andy.select();
-                });
-    }
-
-    /**
-     * Constructs cube of radius 1f and at position 0.0f, 0.15f, 0.0f on the plane
-     * Here Vector3 takes up the size - 0.2f, 0.2f, 0.2f
-     *
-     * @param color - Color
-     */
-    void makeCube(Color color) {
-        MaterialFactory.makeOpaqueWithColor(this, color)
-                .thenAccept(material -> {
-                    arModel = ShapeFactory.makeCube(
-                            new Vector3(0.2f, 0.2f, 0.2f),
-                            new Vector3(0.0f, 0.15f, 0.0f),
-                            material
-                    );
-                });
-    }
-
-    /**
-     * Constructs cylinder of radius 1f and at position 0.0f, 0.15f, 0.0f on the plane
-     * Need to mention height for the cylinder
-     *
-     * @param color - Color
-     */
-    void makeCylinder(Color color) {
-        MaterialFactory.makeOpaqueWithColor(this, color)
-                .thenAccept(material -> {
-                    arModel = ShapeFactory.makeCylinder(
-                            0.1f,
-                            0.3f,
-                            new Vector3(0.0f, 0.15f, 0.0f),
-                            material
-                    );
-                });
+        // TODO: AR 3
     }
 
     /**
@@ -198,14 +111,7 @@ public class MainActivity extends AppCompatActivity {
      * @param color - Color
      */
     void makeSphere(Color color) {
-        MaterialFactory.makeOpaqueWithColor(this, color)
-                .thenAccept(material -> {
-                    arModel = ShapeFactory.makeSphere(
-                            0.1f,
-                            new Vector3(0.0f, 0.15f, 0.0f),
-                            material
-                    );
-                });
+        // TODO: AR 2.0
     }
 
     // ---------------------------------------
@@ -259,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * <p>Finishes the activity if Sceneform can not run
      */
-    public static boolean checkIsSupportedDeviceOrFinish(final Activity activity) {
+    public static boolean checkIsSceneformSupportedOrFinish(final Activity activity) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             Log.e(TAG, "Sceneform requires Android N or later");
             Toast.makeText(activity, "Sceneform requires Android N or later", Toast.LENGTH_LONG).show();

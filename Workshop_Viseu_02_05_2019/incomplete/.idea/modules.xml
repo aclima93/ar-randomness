@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FCM.iml" filepath="$PROJECT_DIR$/FCM.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Workshop_Viseu_02_05_2019.iml" filepath="$PROJECT_DIR$/Workshop_Viseu_02_05_2019.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/incomplete.iml" filepath="$PROJECT_DIR$/incomplete.iml" />
     </modules>
   </component>
 </project>

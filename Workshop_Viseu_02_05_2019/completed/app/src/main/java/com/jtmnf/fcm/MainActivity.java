@@ -3,13 +3,11 @@ package com.jtmnf.fcm;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
@@ -31,7 +29,6 @@ import com.google.ar.sceneform.rendering.Color;
 import com.google.ar.sceneform.rendering.MaterialFactory;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ShapeFactory;
-import com.google.ar.sceneform.rendering.Texture;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -54,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!checkIsSupportedDeviceOrFinish(this)) {
+        // check that SceneForm can run on this device
+        if (!checkIsSceneformSupportedOrFinish(this)) {
             return;
         }
 
@@ -149,11 +147,11 @@ public class MainActivity extends AppCompatActivity {
                     AnchorNode anchorNode = new AnchorNode(anchor);
                     anchorNode.setParent(arFragment.getArSceneView().getScene());
 
-                    // Create the transformable andy and add it to the anchor.
-                    TransformableNode andy = new TransformableNode(arFragment.getTransformationSystem());
-                    andy.setParent(anchorNode);
-                    andy.setRenderable(arModel);
-                    andy.select();
+                    // Create the transformable node and add it to the anchor.
+                    TransformableNode transformableNode = new TransformableNode(arFragment.getTransformationSystem());
+                    transformableNode.setParent(anchorNode);
+                    transformableNode.setRenderable(arModel);
+                    transformableNode.select();
                 });
     }
 
@@ -259,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * <p>Finishes the activity if Sceneform can not run
      */
-    public static boolean checkIsSupportedDeviceOrFinish(final Activity activity) {
+    public static boolean checkIsSceneformSupportedOrFinish(final Activity activity) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             Log.e(TAG, "Sceneform requires Android N or later");
             Toast.makeText(activity, "Sceneform requires Android N or later", Toast.LENGTH_LONG).show();
