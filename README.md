@@ -12,4 +12,4 @@ Pitch: [https://github.com/PixelsCamp/talks/blob/master/2019/augmented-reality-w
 
 Presentation: "Augmented Reality: What, How, Why?" - [https://docs.google.com/presentation/d/1PIMc7CR29O1ceNIAt6JpxcUT5WuhqjhUqE-jBExXXp8/edit?usp=sharing]()
 
-Video: (Coming soon to Youtube)
+Video: [https://youtu.be/hBTMpI7cWD4]()
